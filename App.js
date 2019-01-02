@@ -17,4 +17,4 @@ export default class FixedDimensionsBasics extends Component {
   }
 }
 
-AppRegistry.registerComponent("BasicApp", () => LotsOfStyles);
+AppRegistry.registerComponent("BasicApp", () => FixedDimensionsBasics);
