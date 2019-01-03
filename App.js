@@ -1,44 +1,41 @@
 import React from "react";
-import { FlatList, ActivityIndicator, Text, View } from "react-native";
+import { createStackNavigator } from "react-navigation";
 
-export default class FetchExample extends React.Component {
-  state = { isLoading: true };
-
-  componentDidMount() {
-    return fetch("https://facebook.github.io/react-native/movies.json")
-      .then(response => response.json())
-      .then(responseJson => {
-        this.setState(
-          { isLoading: false, dataSource: responseJson.movies },
-          () => {}
-        );
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }
+class HomeScreen extends React.Component {
+  static navigationOptions = {
+    title: "Welcome"
+  };
 
   render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={{ flex: 1, padding: 20 }}>
-          <ActivityIndicator />
-        </View>
-      );
-    }
-
+    const { navigate } = this.props.navigation;
     return (
-      <View style={{ flex: 1, paddingTop: 20 }}>
-        <FlatList
-          data={this.state.dataSource}
-          renderItem={({ item }) => (
-            <Text>
-              {item.title}, {item.releaseYear}
-            </Text>
-          )}
-          keyExtractor={({ id }, index) => id}
-        />
-      </View>
+      <Button
+        title="Go to Jane's profile"
+        onPress={() => navigate("Profile", { name: "Jane" })}
+      />
     );
   }
 }
+
+class ProfileScreen extends React.Component {
+  static navigationOptions = {
+    title: "Jane's Profile"
+  };
+
+  render() {
+    const { navigate } = this.props.navigation;
+    return (
+      <Button
+        title="Go to HomePage"
+        onPress={() => navigate("Home", { name: "HomePage" })}
+      />
+    );
+  }
+}
+
+const App = createStackNavigator({
+  Home: { screen: HomeScreen },
+  Profile: { screen: ProfileScreen }
+});
+
+export default App;
