@@ -1,41 +1,41 @@
 import React from "react";
-import { createStackNavigator } from "react-navigation";
+import { Animated, Text, View } from "react-native";
 
-class HomeScreen extends React.Component {
-  static navigationOptions = {
-    title: "Welcome"
+class FadeInView extends React.Component {
+  state = {
+    fadeAnim: new Animated.Value(0)
   };
 
+  componentDidMount() {
+    Animated.timing(this.state.fadeAnim, {
+      toValue: 1,
+      duration: 10000
+    }).start();
+  }
+
   render() {
-    const { navigate } = this.props.navigation;
+    let { fadeAnim } = this.state;
+
     return (
-      <Button
-        title="Go to Jane's profile"
-        onPress={() => navigate("Profile", { name: "Jane" })}
-      />
+      <Animated.View style={{ ...this.props.style, opacity: fadeAnim }}>
+        {this.props.children}
+      </Animated.View>
     );
   }
 }
 
-class ProfileScreen extends React.Component {
-  static navigationOptions = {
-    title: "Jane's Profile"
-  };
-
+export default class App extends React.Component {
   render() {
-    const { navigate } = this.props.navigation;
     return (
-      <Button
-        title="Go to HomePage"
-        onPress={() => navigate("Home", { name: "HomePage" })}
-      />
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <FadeInView
+          style={{ width: 250, height: 50, backgroundColor: "powderblue" }}
+        >
+          <Text style={{ fontSize: 28, textAlign: "center", margin: 10 }}>
+            Fading in
+          </Text>
+        </FadeInView>
+      </View>
     );
   }
 }
-
-const App = createStackNavigator({
-  Home: { screen: HomeScreen },
-  Profile: { screen: ProfileScreen }
-});
-
-export default App;
