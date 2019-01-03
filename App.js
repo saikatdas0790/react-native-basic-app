@@ -1,40 +1,64 @@
 import React from "react";
-import { Animated, Text, View } from "react-native";
+import {
+  NativeModules,
+  LayoutAnimation,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  View
+} from "react-native";
 
-class FadeInView extends React.Component {
-  state = {
-    fadeAnim: new Animated.Value(0)
-  };
+const { UIManager } = NativeModules;
 
-  componentDidMount() {
-    Animated.timing(this.state.fadeAnim, {
-      toValue: 1,
-      duration: 10000
-    }).start();
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  box: {
+    width: 200,
+    height: 200,
+    backgroundColor: "red"
+  },
+  button: {
+    backgroundColor: "black",
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    marginTop: 15
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "bold"
   }
-
-  render() {
-    let { fadeAnim } = this.state;
-
-    return (
-      <Animated.View style={{ ...this.props.style, opacity: fadeAnim }}>
-        {this.props.children}
-      </Animated.View>
-    );
-  }
-}
+});
 
 export default class App extends React.Component {
+  state = {
+    w: 100,
+    h: 100
+  };
+
+  onPress = () => {
+    // Animate the update
+    LayoutAnimation.spring();
+    this.setState({ w: this.state.w + 15, h: this.state.h + 15 });
+  };
+
   render() {
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <FadeInView
-          style={{ width: 250, height: 50, backgroundColor: "powderblue" }}
-        >
-          <Text style={{ fontSize: 28, textAlign: "center", margin: 10 }}>
-            Fading in
-          </Text>
-        </FadeInView>
+      <View style={styles.container}>
+        <View
+          style={[styles.box, { width: this.state.w, height: this.state.h }]}
+        />
+        <TouchableOpacity onPress={this.onPress}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>Press me!</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     );
   }
